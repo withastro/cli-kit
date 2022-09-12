@@ -1,3 +1,4 @@
+import { erase, cursor } from "sisteransi";
 export const strip = (str: string) => {
   const pattern = [
     '[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
@@ -72,10 +73,6 @@ export const split = (str: string) => {
   return parts;
 };
 
-/**
- * @param {string} msg
- * @param {number} perLine
- */
 export function lines(msg: string, perLine: number) {
   let lines = String(strip(msg) || '').split(/\r?\n/);
 
@@ -83,3 +80,16 @@ export function lines(msg: string, perLine: number) {
   return lines.map(l => Math.ceil(l.length / perLine))
       .reduce((a, b) => a + b);
 };
+
+export default function(prompt: string, perLine: number) {
+  if (!perLine) return erase.line + cursor.to(0);
+
+  let rows = 0;
+  const lines = prompt.split(/\r?\n/);
+  for (let line of lines) {
+    rows += 1 + Math.floor(Math.max(strip(line).length - 1, 0) / perLine);
+  }
+
+  return erase.lines(rows);
+};
+
