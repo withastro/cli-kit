@@ -19,5 +19,6 @@
     // Properly support importing CJS modules in ESM
     "esModuleInterop": true,
     "allowJs": true
-  }
+  },
+  "include": ["src"]
 }
