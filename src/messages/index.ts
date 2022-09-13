@@ -3,8 +3,9 @@ import color from 'chalk';
 import logUpdate from 'log-update';
 import { random, randomBetween, sleep } from '../utils/index.js'
 import { action } from '../prompt/util/action.js';
+import { strip } from '../prompt/util/clear.js';
 
-export const say = async (messages: string | string[] = [], { clear = false } = {}) => {
+export const say = async (messages: string | string[] = [], { clear = false, hat = '' } = {}) => {
     const rl = readline.createInterface({ input: process.stdin, escapeCodeTimeout: 50 });
     readline.emitKeypressEvents(process.stdin, rl);
     let i = 0;
@@ -12,6 +13,7 @@ export const say = async (messages: string | string[] = [], { clear = false } = 
     const done = async () => {
         process.stdin.off('keypress', done)
         process.stdin.setRawMode(false);
+        rl.close();
         cancelled = true;
         if (i < messages.length - 1) {
             logUpdate.clear();
@@ -38,8 +40,9 @@ export const say = async (messages: string | string[] = [], { clear = false } = 
     const eyes = ['●', '●', '●', '●', '●', '○', '○', '•'];
     const mouths = ['•', '○', '■', '▪', '▫', '▬', '▭', '-', '○'];
     const face = (msg: string, { mouth = mouths[0], eye = eyes[0] } = {}) => {
+        const head = '─'.repeat(3 - strip(hat).split('').length);
         return [
-            `╭─────╮  ${color.bold(color.cyan('Houston:'))}`,
+            `╭──${hat}${head}╮  ${color.bold(color.cyan('Houston:'))}`,
             `│ ${eye} ${color.cyanBright(mouth)} ${eye}  ${msg}`,
             `╰─────╯`,
         ].join('\n')
