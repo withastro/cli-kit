@@ -1,5 +1,11 @@
 # @astrojs/cli-kit
 
+## 0.1.0
+
+### Minor Changes
+
+- 40d2a47: Improve Windows compatability
+
 ## 0.0.4
 
 ### Patch Changes
