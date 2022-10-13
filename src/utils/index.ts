@@ -1,7 +1,10 @@
 import color from 'chalk';
 import { get } from 'node:https';
 import { exec } from 'node:child_process';
+import { platform } from 'node:os';
 import { strip } from '../prompt/util/clear.js';
+
+export const isWin = platform() === 'win32';
 
 export const hookExit = () => {
     const onExit = (code: number) => {

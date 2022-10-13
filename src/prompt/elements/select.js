@@ -1,6 +1,7 @@
 import Prompt from './prompt.js';
 import { erase, cursor } from 'sisteransi';
 import color from 'chalk';
+import { isWin } from '../../utils/index.js';
 import clear, { strip } from '../util/clear.js';
 
 export default class SelectPrompt extends Prompt {
@@ -140,7 +141,7 @@ export default class SelectPrompt extends Prompt {
     if (this.done) {
       this.outputText.push(`${prefix} `, color.dim(`${this.choices[this.cursor]?.label}`));
     } else {
-      this.outputText.push(this.choices.map((choice, i) => i === this.cursor ? `${prefix} ${color.green('●')} ${this.highlight(choice.label)} ${choice.hint ? color.dim(choice.hint) : ''}` : color.dim(`${prefix} ○ ${choice.label} `)).join('\n'))
+      this.outputText.push(this.choices.map((choice, i) => i === this.cursor ? `${prefix} ${color.green(isWin ? '>' : '●')} ${this.highlight(choice.label)} ${choice.hint ? color.dim(choice.hint) : ''}` : color.dim(`${prefix} ${isWin ? '—' : '○'} ${choice.label} `)).join('\n'))
     }
     this.outputText = this.outputText.join('')
 

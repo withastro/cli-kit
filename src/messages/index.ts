@@ -1,7 +1,7 @@
 import readline from 'node:readline';
 import color from 'chalk';
 import logUpdate from 'log-update';
-import { random, randomBetween, sleep } from '../utils/index.js'
+import { random, randomBetween, sleep, isWin } from '../utils/index.js'
 import { action } from '../prompt/util/action.js';
 import { strip } from '../prompt/util/clear.js';
 
@@ -37,14 +37,19 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
     })
 
     const _messages = Array.isArray(messages) ? messages : [messages];
-    const eyes = ['●', '●', '●', '●', '●', '○', '○', '•'];
-    const mouths = ['•', '○', '■', '▪', '▫', '▬', '▭', '-', '○'];
+    const eyes = isWin ? ['•', '•', 'o', 'o', '•', 'O', '^', '•'] : ['●', '●', '●', '●', '●', '○', '○', '•'];
+    const mouths = isWin ? ['•', 'O', '*', 'o', 'o', '•', '-'] : ['•', '○', '■', '▪', '▫', '▬', '▭', '-', '○'];
+    const walls = isWin ? ['—', '|'] : ['─', '│'];
+    const corners = isWin ? ['+', '+', '+', '+'] : ['╭', '╮', '╰', '╯'];
+
     const face = (msg: string, { mouth = mouths[0], eye = eyes[0] } = {}) => {
-        const head = '─'.repeat(3 - strip(hat).split('').length);
+        const [h, v] = walls;
+        const [tl, tr, bl, br] = corners;
+        const head = h.repeat(3 - strip(hat).split('').length);
         return [
-            `╭──${hat}${head}╮  ${color.bold(color.cyan('Houston:'))}`,
-            `│ ${eye} ${color.cyanBright(mouth)} ${eye}  ${msg}`,
-            `╰─────╯`,
+            `${tl}${h.repeat(2)}${hat}${head}${tr}  ${color.bold(color.cyan('Houston:'))}`,
+            `${v} ${eye} ${color.cyanBright(mouth)} ${eye}  ${msg}`,
+            `${bl}${h.repeat(5)}${br}`,
         ].join('\n')
     };
 
@@ -62,7 +67,7 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
             j++;
         }
         if (!cancelled) await sleep(100);
-        const text = '\n' + face(_message.join(' '), { mouth: '◡', eye: '◠' });
+        const text = '\n' + face(_message.join(' '), { mouth: isWin ? 'u' : '◡', eye: isWin ? '^' : '◠' });
         logUpdate(text);
         if (!cancelled) await sleep(randomBetween(800, 900));
         i++;
