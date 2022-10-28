@@ -1,5 +1,11 @@
 # @astrojs/cli-kit
 
+## 0.1.1
+
+### Patch Changes
+
+- Update `isWin` util to respect a `FORCE_UNICODE` process.env variable
+
 ## 0.1.0
 
 ### Minor Changes

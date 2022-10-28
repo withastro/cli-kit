@@ -1,7 +1,7 @@
 import Prompt from './prompt.js';
 import { erase, cursor } from 'sisteransi';
 import color from 'chalk';
-import { isWin } from '../../utils/index.js';
+import { useAscii } from '../../utils/index.js';
 import clear, { lines, strip } from '../util/clear.js';
 
 /**
@@ -208,7 +208,7 @@ export default class TextPrompt extends Prompt {
     ].join('');
 
     if (this.error) {
-      this.outputError += `  ${color.redBright((isWin ? '> ' : '▶ ') + this.errorMsg)}`;
+      this.outputError += `  ${color.redBright((useAscii ? '> ' : '▶ ') + this.errorMsg)}`;
     }
 
     this.out.write(erase.line + cursor.to(0) + this.outputText + cursor.save + this.outputError + cursor.restore + cursor.move(this.cursorOffset, 0));
