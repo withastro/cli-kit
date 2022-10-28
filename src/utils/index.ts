@@ -4,7 +4,11 @@ import { exec } from 'node:child_process';
 import { platform } from 'node:os';
 import { strip } from '../prompt/util/clear.js';
 
-export let useAscii = platform() === 'win32';
+const unicode = { enabled: platform() !== 'win32' };
+export function forceUnicode() {
+    unicode.enabled = true;
+}
+export const useAscii = () => !unicode.enabled;
 
 export const hookExit = () => {
     const onExit = (code: number) => {

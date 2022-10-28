@@ -1,5 +1,11 @@
 # @astrojs/cli-kit
 
+## 0.1.3
+
+### Patch Changes
+
+- update ascii/unicode logic, expose `forceUnicode` util
+
 ## 0.1.2
 
 ### Patch Changes

@@ -141,7 +141,7 @@ export default class SelectPrompt extends Prompt {
     if (this.done) {
       this.outputText.push(`${prefix} `, color.dim(`${this.choices[this.cursor]?.label}`));
     } else {
-      this.outputText.push(this.choices.map((choice, i) => i === this.cursor ? `${prefix} ${color.green(useAscii ? '>' : '●')} ${this.highlight(choice.label)} ${choice.hint ? color.dim(choice.hint) : ''}` : color.dim(`${prefix} ${useAscii ? '—' : '○'} ${choice.label} `)).join('\n'))
+      this.outputText.push(this.choices.map((choice, i) => i === this.cursor ? `${prefix} ${color.green(useAscii() ? '>' : '●')} ${this.highlight(choice.label)} ${choice.hint ? color.dim(choice.hint) : ''}` : color.dim(`${prefix} ${useAscii() ? '—' : '○'} ${choice.label} `)).join('\n'))
     }
     this.outputText = this.outputText.join('')
 

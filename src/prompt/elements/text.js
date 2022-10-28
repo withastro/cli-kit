@@ -208,7 +208,7 @@ export default class TextPrompt extends Prompt {
     ].join('');
 
     if (this.error) {
-      this.outputError += `  ${color.redBright((useAscii ? '> ' : '▶ ') + this.errorMsg)}`;
+      this.outputError += `  ${color.redBright((useAscii() ? '> ' : '▶ ') + this.errorMsg)}`;
     }
 
     this.out.write(erase.line + cursor.to(0) + this.outputText + cursor.save + this.outputError + cursor.restore + cursor.move(this.cursorOffset, 0));

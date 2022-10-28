@@ -37,10 +37,10 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
     })
 
     const _messages = Array.isArray(messages) ? messages : [messages];
-    const eyes = useAscii ? ['•', '•', 'o', 'o', '•', 'O', '^', '•'] : ['●', '●', '●', '●', '●', '○', '○', '•'];
-    const mouths = useAscii ? ['•', 'O', '*', 'o', 'o', '•', '-'] : ['•', '○', '■', '▪', '▫', '▬', '▭', '-', '○'];
-    const walls = useAscii ? ['—', '|'] : ['─', '│'];
-    const corners = useAscii ? ['+', '+', '+', '+'] : ['╭', '╮', '╰', '╯'];
+    const eyes = useAscii() ? ['•', '•', 'o', 'o', '•', 'O', '^', '•'] : ['●', '●', '●', '●', '●', '○', '○', '•'];
+    const mouths = useAscii() ? ['•', 'O', '*', 'o', 'o', '•', '-'] : ['•', '○', '■', '▪', '▫', '▬', '▭', '-', '○'];
+    const walls = useAscii() ? ['—', '|'] : ['─', '│'];
+    const corners = useAscii() ? ['+', '+', '+', '+'] : ['╭', '╮', '╰', '╯'];
 
     const face = (msg: string, { mouth = mouths[0], eye = eyes[0] } = {}) => {
         const [h, v] = walls;
@@ -67,7 +67,7 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
             j++;
         }
         if (!cancelled) await sleep(100);
-        const text = '\n' + face(_message.join(' '), { mouth: useAscii ? 'u' : '◡', eye: useAscii ? '^' : '◠' });
+        const text = '\n' + face(_message.join(' '), { mouth: useAscii() ? 'u' : '◡', eye: useAscii() ? '^' : '◠' });
         logUpdate(text);
         if (!cancelled) await sleep(randomBetween(800, 900));
         i++;
