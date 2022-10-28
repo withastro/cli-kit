@@ -1,5 +1,11 @@
 # @astrojs/cli-kit
 
+## 0.1.2
+
+### Patch Changes
+
+- Fix useAscii logic
+
 ## 0.1.1
 
 ### Patch Changes

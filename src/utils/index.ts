@@ -4,10 +4,7 @@ import { exec } from 'node:child_process';
 import { platform } from 'node:os';
 import { strip } from '../prompt/util/clear.js';
 
-const toBoolean = (value: '0' | 'false' | string) => !['0', 'false'].includes(value)
-
-const { FORCE_UNICODE = '0' } = process.env ?? {};
-export const useAscii = platform() === 'darwin' && !toBoolean(FORCE_UNICODE);
+export let useAscii = platform() === 'win32';
 
 export const hookExit = () => {
     const onExit = (code: number) => {
