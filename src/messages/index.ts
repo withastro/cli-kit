@@ -12,7 +12,7 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
     let cancelled = false;
     const done = async () => {
         process.stdin.off('keypress', done)
-        process.stdin.setRawMode(false);
+        if (process.stdin.isTTY) process.stdin.setRawMode(false);
         rl.close();
         cancelled = true;
         if (i < messages.length - 1) {
@@ -26,7 +26,7 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
 
     if (process.stdin.isTTY) process.stdin.setRawMode(true);
     process.stdin.on('keypress', (str, key) => {
-        process.stdin.setRawMode(true);
+        if (process.stdin.isTTY) process.stdin.setRawMode(true);
         const k = action(key, false);
         if (k === 'abort') {
             done();
@@ -62,14 +62,15 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
             if (word) msg.push(word);
             const mouth = random(mouths);
             if (j % 7 === 0) eye = random(eyes);
+            if (i == 1) eye = color.redBright(eye);
             logUpdate('\n' + face(msg.join(' '), { mouth, eye }));
             if (!cancelled) await sleep(randomBetween(75, 200));
             j++;
         }
         if (!cancelled) await sleep(100);
-        const text = '\n' + face(_message.join(' '), { mouth: useAscii() ? 'u' : '◡', eye: useAscii() ? '^' : '◠' });
+        const text = '\n' + face(_message.join(' '), { mouth: useAscii() ? 'u' : i == 1 ? color.red('-') : '◡', eye: useAscii() ? '^' : i == 1 ? color.red('◡') : '◠' });
         logUpdate(text);
-        if (!cancelled) await sleep(randomBetween(800, 900));
+        if (!cancelled) await sleep(randomBetween(1200, 1400));
         i++;
     }
     process.stdin.off('keypress', done);
