@@ -1,5 +1,11 @@
 # @astrojs/cli-kit
 
+## 0.1.4
+
+### Patch Changes
+
+- 1c61aa5: Ensure setRawMode is only called when `process.stdin.isTTY`
+
 ## 0.1.3
 
 ### Patch Changes
