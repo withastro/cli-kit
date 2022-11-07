@@ -20,6 +20,10 @@
         "types.d.ts",
         "utils.d.ts"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/withastro/cli-kit.git"
+    },
     "scripts": {
         "build": "tsc -p ."
     },
