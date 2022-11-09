@@ -27,7 +27,7 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
     if (process.stdin.isTTY) process.stdin.setRawMode(true);
     process.stdin.on('keypress', (str, key) => {
         if (process.stdin.isTTY) process.stdin.setRawMode(true);
-        const k = action(key, false);
+        const k = action(key, true);
         if (k === 'abort') {
             done();
             return process.exit(0);
