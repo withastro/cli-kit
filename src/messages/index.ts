@@ -62,13 +62,13 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
             if (word) msg.push(word);
             const mouth = random(mouths);
             if (j % 7 === 0) eye = random(eyes);
-            if (i == 1) eye = color.redBright(eye);
+            if (i == 1) eye = eye;
             logUpdate('\n' + face(msg.join(' '), { mouth, eye }));
             if (!cancelled) await sleep(randomBetween(75, 200));
             j++;
         }
         if (!cancelled) await sleep(100);
-        const text = '\n' + face(_message.join(' '), { mouth: useAscii() ? 'u' : i == 1 ? color.red('-') : '◡', eye: useAscii() ? '^' : i == 1 ? color.red('◡') : '◠' });
+        const text = '\n' + face(_message.join(' '), { mouth: useAscii() ? 'u' : '◡', eye: useAscii() ? '^' : '◠' });
         logUpdate(text);
         if (!cancelled) await sleep(randomBetween(1200, 1400));
         i++;
