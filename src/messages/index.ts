@@ -76,6 +76,8 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
     process.stdin.off('keypress', done);
     await sleep(100);
     done();
+    if (process.stdin.isTTY) process.stdin.setRawMode(false);
+    process.stdin.removeAllListeners('keypress')
 }
 
 export const label = (text: string, c = color.bgHex('#883AE2'), t = color.whiteBright) => c(` ${t(text)} `)
