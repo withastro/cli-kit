@@ -1,5 +1,11 @@
 # @astrojs/cli-kit
 
+## 0.1.5
+
+### Patch Changes
+
+- b686135: Make Houston friendly again (whoops)
+
 ## 0.1.4
 
 ### Patch Changes
