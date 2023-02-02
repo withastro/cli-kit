@@ -1,6 +1,6 @@
 import readline from 'node:readline';
 import chalk from 'chalk';
-import logUpdate from 'log-update';
+import { createLogUpdate } from 'log-update';
 import { erase, cursor } from 'sisteransi';
 import { sleep } from '../utils/index.js'
 
@@ -49,6 +49,7 @@ function getGradientAnimFrames() {
  * @returns Ora spinner for running .stop()
  */
 async function gradient(text: string, { stdin = process.stdin, stdout = process.stdout } = {}) {
+	const logUpdate = createLogUpdate(stdout);
 	let i = 0;
 	const frames = getGradientAnimFrames();
 	let interval: NodeJS.Timeout;
@@ -104,5 +105,5 @@ export async function spinner({ start, end, while: update = () => sleep(100) }: 
         await act;
         loading.stop();
     };
-    stdout.write(`\n${' '.repeat(5)} ${chalk.green('✔')}  ${chalk.green(end)}`)
+    stdout.write(`${' '.repeat(5)} ${chalk.green('✔')}  ${chalk.green(end)}\n`)
 }
