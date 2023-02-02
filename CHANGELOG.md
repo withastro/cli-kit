@@ -1,5 +1,11 @@
 # @astrojs/cli-kit
 
+## 0.2.1
+
+### Patch Changes
+
+- d24e9ee: Fix line spacing for spinner
+
 ## 0.2.0
 
 ### Minor Changes
