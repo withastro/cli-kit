@@ -48,25 +48,25 @@ function getGradientAnimFrames() {
  * @param text display text next to rocket
  * @returns Ora spinner for running .stop()
  */
-async function gradient(text: string) {
+async function gradient(text: string, { stdin = process.stdin, stdout = process.stdout } = {}) {
 	let i = 0;
 	const frames = getGradientAnimFrames();
 	let interval: NodeJS.Timeout;
 
-	const rl = readline.createInterface({ input: process.stdin, escapeCodeTimeout: 50 });
-    readline.emitKeypressEvents(process.stdin, rl);
+	const rl = readline.createInterface({ input: stdin, escapeCodeTimeout: 50 });
+    readline.emitKeypressEvents(stdin, rl);
 
-    if (process.stdin.isTTY) process.stdin.setRawMode(true);
+    if (stdin.isTTY) stdin.setRawMode(true);
     const keypress = () => {
-      if (process.stdin.isTTY) process.stdin.setRawMode(true);
-	  process.stdout.write(cursor.hide + erase.lines(2));
+      if (stdin.isTTY) stdin.setRawMode(true);
+	  stdout.write(cursor.hide + erase.lines(2));
     };
 
 	let done = false;
 	const spinner = {
 		start() {
-			process.stdout.write(cursor.hide);
-			process.stdin.on('keypress', keypress);
+			stdout.write(cursor.hide);
+			stdin.on('keypress', keypress);
 			logUpdate(`${frames[0]}  ${text}`);
 
 			const loop = async () => {
@@ -86,7 +86,7 @@ async function gradient(text: string) {
 		},
 		stop() {
 			done = true;
-			process.stdin.removeListener('keypress', keypress);
+			stdin.removeListener('keypress', keypress);
 			clearInterval(interval);
 			logUpdate.clear();
 		}
@@ -95,14 +95,14 @@ async function gradient(text: string) {
 	return spinner;
 }
 
-export async function spinner({ start, end, while: update = () => sleep(100) }: { start: string, end: string, while: (...args: any) => Promise<any> }) {
+export async function spinner({ start, end, while: update = () => sleep(100) }: { start: string, end: string, while: (...args: any) => Promise<any> }, { stdin = process.stdin, stdout = process.stdout } = {}) {
 	const act = update();
     const tooslow = Object.create(null);
     const result = await Promise.race([sleep(500).then(() => tooslow), act]);
     if (result === tooslow) {
-        const loading = await gradient(chalk.green(start));
+        const loading = await gradient(chalk.green(start), { stdin, stdout });
         await act;
         loading.stop();
     };
-    console.log(`${' '.repeat(5)} ${chalk.green('✔')}  ${chalk.green(end)}`)
+    stdout.write(`\n${' '.repeat(5)} ${chalk.green('✔')}  ${chalk.green(end)}`)
 }

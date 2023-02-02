@@ -1,18 +1,19 @@
 import readline from 'node:readline';
 import color from 'chalk';
-import logUpdate from 'log-update';
+import { createLogUpdate } from 'log-update';
 import { random, randomBetween, sleep, useAscii } from '../utils/index.js'
 import { action } from '../prompt/util/action.js';
 import { strip } from '../prompt/util/clear.js';
 
-export const say = async (messages: string | string[] = [], { clear = false, hat = '' } = {}) => {
-    const rl = readline.createInterface({ input: process.stdin, escapeCodeTimeout: 50 });
-    readline.emitKeypressEvents(process.stdin, rl);
+export const say = async (messages: string | string[] = [], { clear = false, hat = '', stdin = process.stdin, stdout = process.stdout } = {}) => {
+    const rl = readline.createInterface({ input: stdin, escapeCodeTimeout: 50 });
+    const logUpdate = createLogUpdate(stdout, { showCursor: false });
+    readline.emitKeypressEvents(stdin, rl);
     let i = 0;
     let cancelled = false;
     const done = async () => {
-        process.stdin.off('keypress', done)
-        if (process.stdin.isTTY) process.stdin.setRawMode(false);
+        stdin.off('keypress', done)
+        if (stdin.isTTY) stdin.setRawMode(false);
         rl.close();
         cancelled = true;
         if (i < messages.length - 1) {
@@ -24,9 +25,9 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
         }
     }
 
-    if (process.stdin.isTTY) process.stdin.setRawMode(true);
-    process.stdin.on('keypress', (str, key) => {
-        if (process.stdin.isTTY) process.stdin.setRawMode(true);
+    if (stdin.isTTY) stdin.setRawMode(true);
+    stdin.on('keypress', (str, key) => {
+        if (stdin.isTTY) stdin.setRawMode(true);
         const k = action(key, true);
         if (k === 'abort') {
             done();
@@ -73,11 +74,11 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
         if (!cancelled) await sleep(randomBetween(1200, 1400));
         i++;
     }
-    process.stdin.off('keypress', done);
+    stdin.off('keypress', done);
     await sleep(100);
     done();
-    if (process.stdin.isTTY) process.stdin.setRawMode(false);
-    process.stdin.removeAllListeners('keypress')
+    if (stdin.isTTY) stdin.setRawMode(false);
+    stdin.removeAllListeners('keypress')
 }
 
 export const label = (text: string, c = color.bgHex('#883AE2'), t = color.whiteBright) => c(` ${t(text)} `)

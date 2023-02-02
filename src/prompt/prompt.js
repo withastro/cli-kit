@@ -3,7 +3,7 @@ const noop = (v) => v;
 
 function toPrompt(type, args, opts = {}) {
   return new Promise((res, rej) => {
-    const p = new el[type](args);
+    const p = new el[type](args, opts);
     const onAbort = opts.onAbort || noop;
     const onSubmit = opts.onSubmit || noop;
     const onExit = opts.onExit || noop;
@@ -24,7 +24,7 @@ const prompts = {
 /** @type {import('../../types').default} */
 export default async function prompt(
   questions = [],
-  { onSubmit = noop, onCancel = () => process.exit(0) } = {}
+  { onSubmit = noop, onCancel = () => process.exit(0), stdin = process.stdin, stdout = process.stdout } = {}
 ) {
   const answers = {};
   questions = [].concat(questions);
@@ -35,7 +35,7 @@ export default async function prompt(
 
     try {
       // Get the injected answer if there is one or prompt the user
-      answer = await prompts[type](question);
+      answer = await prompts[type](Object.assign({ stdin, stdout }, question));
       answers[name] = answer;
       quit = await onSubmit(question, answer, answers);
     } catch (err) {
