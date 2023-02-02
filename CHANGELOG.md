@@ -1,5 +1,11 @@
 # @astrojs/cli-kit
 
+## 0.2.0
+
+### Minor Changes
+
+- d64ab0b: Expose `stdout` hooks to all functions
+
 ## 0.1.6
 
 ### Patch Changes
