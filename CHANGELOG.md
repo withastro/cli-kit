@@ -1,5 +1,11 @@
 # @astrojs/cli-kit
 
+## 0.2.2
+
+### Patch Changes
+
+- Update project names
+
 ## 0.2.1
 
 ### Patch Changes
