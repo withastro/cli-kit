@@ -1,5 +1,11 @@
 # @astrojs/cli-kit
 
+## 0.2.3
+
+### Patch Changes
+
+- 9fd538f: Respect Ctrl + C when spinner is active
+
 ## 0.2.2
 
 ### Patch Changes
