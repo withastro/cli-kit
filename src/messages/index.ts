@@ -3,7 +3,7 @@ import color from 'chalk';
 import { createLogUpdate } from 'log-update';
 import { random, randomBetween, sleep, useAscii } from '../utils/index.js'
 import { action } from '../prompt/util/action.js';
-import { strip } from '../prompt/util/clear.js';
+import { strip, wrap } from '../prompt/util/clear.js';
 
 type Message = string | Promise<string>;
 
@@ -49,10 +49,13 @@ export const say = async (msg: Message | Message[] = [], { clear = false, hat = 
         const [h, v] = walls;
         const [tl, tr, bl, br] = corners;
         const head = h.repeat(3 - strip(hat).split('').length);
+        const prefix = ' '.repeat(9);
+        const [message, secondMessage = '', ...lines] = wrap(`${prefix}${msg}`, prefix).split('\n');
         return [
             `${tl}${h.repeat(2)}${hat}${head}${tr}  ${color.bold(color.cyan('Houston:'))}`,
-            `${v} ${eye} ${color.cyanBright(mouth)} ${eye}  ${msg}`,
-            `${bl}${h.repeat(5)}${br}`,
+            `${v} ${eye} ${color.cyanBright(mouth)} ${eye}  ${message.trimStart()}`,
+            `${bl}${h.repeat(5)}${br}  ${secondMessage.trimStart()}`,
+            ...lines
         ].join('\n')
     };
 
