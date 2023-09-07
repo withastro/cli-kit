@@ -3,7 +3,7 @@ import color from 'chalk';
 import { createLogUpdate } from 'log-update';
 import { random, randomBetween, sleep, useAscii } from '../utils/index.js'
 import { action } from '../prompt/util/action.js';
-import { strip, wrap } from '../prompt/util/clear.js';
+import { strip } from '../prompt/util/clear.js';
 
 type Message = string | Promise<string>;
 
@@ -49,13 +49,10 @@ export const say = async (msg: Message | Message[] = [], { clear = false, hat = 
         const [h, v] = walls;
         const [tl, tr, bl, br] = corners;
         const head = h.repeat(3 - strip(hat).split('').length);
-        const prefix = ' '.repeat(9);
-        const [message, secondMessage = '', ...lines] = wrap(`${prefix}${msg}`, prefix).split('\n');
         return [
             `${tl}${h.repeat(2)}${hat}${head}${tr}  ${color.bold(color.cyan('Houston:'))}`,
-            `${v} ${eye} ${color.cyanBright(mouth)} ${eye}  ${message.trimStart()}`,
-            `${bl}${h.repeat(5)}${br}  ${secondMessage.trimStart()}`,
-            ...lines
+            `${v} ${eye} ${color.cyanBright(mouth)} ${eye}  ${msg}`,
+            `${bl}${h.repeat(5)}${br}`,
         ].join('\n')
     };
 
@@ -65,7 +62,8 @@ export const say = async (msg: Message | Message[] = [], { clear = false, hat = 
         let msg = [];
         let eye = random(eyes);
         let j = 0;
-        for (const word of [''].concat(_message)) {
+        for (let word of [''].concat(_message)) {
+            word = await word;
             if (word) msg.push(word);
             const mouth = random(mouths);
             if (j % 7 === 0) eye = random(eyes);
@@ -75,7 +73,8 @@ export const say = async (msg: Message | Message[] = [], { clear = false, hat = 
             j++;
         }
         if (!cancelled) await sleep(100);
-        const text = '\n' + face(_message.join(' '), { mouth: useAscii() ? 'u' : '◡', eye: useAscii() ? '^' : '◠' });
+        const tmp = await Promise.all(_message).then(res => res.join(' '))
+        const text = '\n' + face(tmp, { mouth: useAscii() ? 'u' : '◡', eye: useAscii() ? '^' : '◠' });
         logUpdate(text);
         if (!cancelled) await sleep(randomBetween(1200, 1400));
         i++;
