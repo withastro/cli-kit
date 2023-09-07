@@ -30,7 +30,7 @@ export const wrap = (str: string, indent = '', max = process.stdout.columns) => 
   for (const raw of words) {
     const len = strip(raw).length;
     if (i + len > max) {
-      i = 0;
+      i = indent.length;
       lines.push('\n' + indent, raw);
     } else {
       lines.push(raw);
