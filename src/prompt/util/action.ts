@@ -14,6 +14,8 @@ export const action = (key: Key, isSelect: boolean) => {
   if (isSelect) {
     if (key.name === 'j') return 'down';
     if (key.name === 'k') return 'up';
+    if (key.ctrl && key.name === 'n') return 'down'
+    if (key.ctrl && key.name === 'p') return 'up'
   }
 
   if (key.name === 'return') return 'submit';
