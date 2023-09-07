@@ -1,5 +1,12 @@
 # @astrojs/cli-kit
 
+## 0.2.4
+
+### Patch Changes
+
+- fb2f11f: add support for ctrl+n and ctrl+p navigation in multiselect prompt
+- 171a7fe: Allow messages to be async
+
 ## 0.2.3
 
 ### Patch Changes
