@@ -5,7 +5,10 @@ import { random, randomBetween, sleep, useAscii } from '../utils/index.js'
 import { action } from '../prompt/util/action.js';
 import { strip } from '../prompt/util/clear.js';
 
-export const say = async (messages: string | string[] = [], { clear = false, hat = '', stdin = process.stdin, stdout = process.stdout } = {}) => {
+type Message = string | Promise<string>;
+
+export const say = async (msg: Message | Message[] = [], { clear = false, hat = '', stdin = process.stdin, stdout = process.stdout } = {}) => {
+    const messages = Array.isArray(msg) ? msg : [msg];
     const rl = readline.createInterface({ input: stdin, escapeCodeTimeout: 50 });
     const logUpdate = createLogUpdate(stdout, { showCursor: false });
     readline.emitKeypressEvents(stdin, rl);
@@ -37,7 +40,6 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
         done();
     })
 
-    const _messages = Array.isArray(messages) ? messages : [messages];
     const eyes = useAscii() ? ['•', '•', 'o', 'o', '•', 'O', '^', '•'] : ['●', '●', '●', '●', '●', '○', '○', '•'];
     const mouths = useAscii() ? ['•', 'O', '*', 'o', 'o', '•', '-'] : ['•', '○', '■', '▪', '▫', '▬', '▭', '-', '○'];
     const walls = useAscii() ? ['—', '|'] : ['─', '│'];
@@ -54,7 +56,8 @@ export const say = async (messages: string | string[] = [], { clear = false, hat
         ].join('\n')
     };
 
-    for (const message of _messages) {
+    for (let message of messages) {
+        message = await message
         const _message = Array.isArray(message) ? message : message.split(' ');
         let msg = [];
         let eye = random(eyes);
