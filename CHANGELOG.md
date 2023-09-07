@@ -1,5 +1,12 @@
 # @astrojs/cli-kit
 
+## 0.2.5
+
+### Patch Changes
+
+- 98fe7c3: Fix nested promises in `say`
+- 98fe7c3: Revert Houston wrapping
+
 ## 0.2.4
 
 ### Patch Changes
