@@ -21,7 +21,7 @@ const prompts = {
   multiselect: (args) => toPrompt("MultiselectPrompt", args),
 };
 
-/** @type {import('../../types').default} */
+/** @type {import('../../types.js').default} */
 export default async function prompt(
   questions = [],
   { onSubmit = noop, onCancel = () => process.exit(0), stdin = process.stdin, stdout = process.stdout } = {}
