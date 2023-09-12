@@ -1,5 +1,11 @@
 # @astrojs/cli-kit
 
+## 0.3.0
+
+### Minor Changes
+
+- d1b4e01: Fix types not working properly under moduleResolution: 'node16'
+
 ## 0.2.5
 
 ### Patch Changes
