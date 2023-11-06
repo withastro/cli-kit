@@ -115,9 +115,10 @@ export async function spinner(
 ) {
     const loading = await gradient(chalk.green(start), { stdin, stdout });
 
+    const act = update();
+    const tooslow = Object.create(null);
+  
     try {
-        const act = update();
-        const tooslow = Object.create(null);
         const result = await Promise.race([sleep(500).then(() => tooslow), act]);
         if (result === tooslow) {
             await act;
