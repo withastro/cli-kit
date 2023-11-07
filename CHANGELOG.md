@@ -1,5 +1,11 @@
 # @astrojs/cli-kit
 
+## 0.3.1
+
+### Patch Changes
+
+- de0ef35: Added onError functionality to spinner to handle errors if while arg throws an error
+
 ## 0.3.0
 
 ### Minor Changes
