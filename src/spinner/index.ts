@@ -108,17 +108,26 @@ export async function spinner(
   {
     start,
     end,
+    onError,
     while: update = () => sleep(100),
-  }: { start: string; end: string; while: (...args: any) => Promise<any> },
+  }: { start: string; end: string; onError?: (e: any) => void; while: (...args: any) => Promise<any> },
   { stdin = process.stdin, stdout = process.stdout } = {}
 ) {
-  const act = update();
-  const tooslow = Object.create(null);
-  const result = await Promise.race([sleep(500).then(() => tooslow), act]);
-  if (result === tooslow) {
     const loading = await gradient(chalk.green(start), { stdin, stdout });
-    await act;
-    loading.stop();
-  }
-  stdout.write(`${" ".repeat(5)} ${chalk.green("✔")}  ${chalk.green(end)}\n`);
+
+    const act = update();
+    const tooslow = Object.create(null);
+  
+    try {
+        const result = await Promise.race([sleep(500).then(() => tooslow), act]);
+        if (result === tooslow) {
+            await act;
+        }
+
+        stdout.write(`${" ".repeat(5)} ${chalk.green("✔")}  ${chalk.green(end)}\n`);
+    } catch (e) {
+        onError?.(e);
+    } finally {
+        loading.stop();
+    }
 }
