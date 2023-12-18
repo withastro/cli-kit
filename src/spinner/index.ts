@@ -67,9 +67,10 @@ async function gradient(
       process.exit(0);
     }
     if (stdin.isTTY) stdin.setRawMode(true);
-    stdout.write(cursor.hide + erase.lines(1));
+    stdout.write(cursor.hide + erase.lines(text.split('\n').length));
   };
 
+  let refresh = () => {};
   let done = false;
   const spinner = {
     start() {
@@ -85,12 +86,16 @@ async function gradient(
           i = 0;
         }
         let frame = frames[i];
-        logUpdate(`${frame}  ${text}`);
+        refresh = () => logUpdate(`${frame}  ${text}`);
+        refresh();
         if (!done) await sleep(90);
         loop();
       };
-
       loop();
+    },
+    update(value: string) {
+      text = value;
+      refresh();
     },
     stop() {
       done = true;
@@ -113,8 +118,7 @@ export async function spinner(
   }: { start: string; end: string; onError?: (e: any) => void; while: (...args: any) => Promise<any> },
   { stdin = process.stdin, stdout = process.stdout } = {}
 ) {
-    const loading = await gradient(chalk.green(start), { stdin, stdout });
-
+    const loading = await gradient(start, { stdin, stdout });
     const act = update();
     const tooslow = Object.create(null);
   
@@ -123,11 +127,86 @@ export async function spinner(
         if (result === tooslow) {
             await act;
         }
-
         stdout.write(`${" ".repeat(5)} ${chalk.green("✔")}  ${chalk.green(end)}\n`);
     } catch (e) {
         onError?.(e);
     } finally {
         loading.stop();
     }
+}
+
+const TASK_SUCCESS_FLASH = 750;
+const TASK_INDENT = 5;
+export interface Task {
+  start: string,
+  end: string,
+  pending: string;
+  onError?: (e: any) => void;
+  while: (...args: any) => Promise<any>
+}
+
+function formatTask(task: Task, state: 'start' | 'end' | 'pending' | 'success') {
+  switch (state) {
+    case 'start': return `${" ".repeat(TASK_INDENT + 3)} ${chalk.cyan(`▶ ${task.start}`)}`;
+    case 'pending': return `${" ".repeat(TASK_INDENT + 3)} ${chalk.dim(`□ ${task.pending}`)}`;
+    case 'success': return `${" ".repeat(TASK_INDENT + 3)} ${chalk.green(`✔ ${task.end}`)}`;
+    case 'end': return `${" ".repeat(TASK_INDENT + 3)} ${chalk.dim(`■ ${task.end}`)}`;
+  }
+}
+/**
+ * Displays a spinner while executing a list of sequential tasks
+ * Note that the tasks are not parallelized! A task is implicitly dependent on the tasks that preceed it.
+ *
+ * @param labels configures the start and end labels for the task queue
+ * @param tasks is an array of tasks that will be displayed as a list
+ * @param options can be used to the source of `stdin` and `stdout`
+ */
+export async function tasks({ start, end }: { start: string, end: string}, t: Task[], { stdin = process.stdin, stdout = process.stdout } = {}) {
+  let text: string[] = Array.from({ length: t.length + 1 }, () => '');
+  text[0] = start;
+  t.forEach((task, i) => {
+    const state = i === 0 ? 'start' : 'pending';
+    text[i + 1] = formatTask(task, state);
+  })
+  const loading = await gradient(text.join('\n'), { stdin, stdout });
+
+  const refresh = () => loading.update(text.join('\n'));
+
+  let action;
+  let i = 0;
+  let timeouts: NodeJS.Timeout[] = [];
+  
+  for (const task of t) {
+    i++;
+    text[i] = formatTask(task, 'start');
+    refresh();
+    action = task.while();
+    try {
+        await action;
+        text[i] = formatTask(task, 'success');
+        refresh();
+
+        const active = { i, task };
+        timeouts.push(
+          setTimeout(() => {
+            const { i, task } = active;
+            text[i] = formatTask(task, 'end');
+            refresh();
+          }, TASK_SUCCESS_FLASH)
+        )
+    } catch (e) {
+        loading.stop();
+        task.onError?.(e);
+    }
+  }
+  for (const timeout of timeouts) {
+    clearTimeout(timeout);
+  }
+  await sleep(TASK_SUCCESS_FLASH);
+  loading.stop();
+  text[0] = `${" ".repeat(TASK_INDENT)} ${chalk.green("✔")}  ${chalk.green(end)}`;
+  t.forEach((task, i) => {
+    text[i + 1] = formatTask(task, 'end')
+  })
+  console.log(text.join('\n'));
 }
