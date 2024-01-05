@@ -7,7 +7,7 @@ import { strip } from '../prompt/util/clear.js';
 
 type Message = string | Promise<string>;
 
-export const say = async (msg: Message | Message[] = [], { clear = false, hat = '', stdin = process.stdin, stdout = process.stdout } = {}) => {
+export const say = async (msg: Message | Message[] = [], { clear = false, hat = '', tie = '', stdin = process.stdin, stdout = process.stdout } = {}) => {
     const messages = Array.isArray(msg) ? msg : [msg];
     const rl = readline.createInterface({ input: stdin, escapeCodeTimeout: 50 });
     const logUpdate = createLogUpdate(stdout, { showCursor: false });
@@ -49,10 +49,11 @@ export const say = async (msg: Message | Message[] = [], { clear = false, hat = 
         const [h, v] = walls;
         const [tl, tr, bl, br] = corners;
         const head = h.repeat(3 - strip(hat).split('').length);
+        const bottom = h.repeat(3 - strip(tie).split('').length);
         return [
             `${tl}${h.repeat(2)}${hat}${head}${tr}  ${color.bold(color.cyan('Houston:'))}`,
             `${v} ${eye} ${color.cyanBright(mouth)} ${eye}  ${msg}`,
-            `${bl}${h.repeat(5)}${br}`,
+            `${bl}${h.repeat(2)}${tie}${bottom}${br}`,
         ].join('\n')
     };
 
