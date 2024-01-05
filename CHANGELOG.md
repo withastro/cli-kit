@@ -1,5 +1,11 @@
 # @astrojs/cli-kit
 
+## 0.4.1
+
+### Patch Changes
+
+- 3689076: Adds a new `tie` option to the `say` function
+
 ## 0.4.0
 
 ### Minor Changes
