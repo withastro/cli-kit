@@ -4,7 +4,7 @@
   "version": "0.4.1",
   "license": "MIT",
   "types": "./dist/index.d.ts",
-  "packageManager": "pnpm@7.11.0",
+  "packageManager": "pnpm@9.15.4",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -28,14 +28,14 @@
     "build": "tsc -p ."
   },
   "dependencies": {
-    "chalk": "^5.0.1",
-    "log-update": "^5.0.1",
+    "chalk": "^5.4.1",
+    "log-update": "^6.1.0",
     "sisteransi": "^1.0.5"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.24.4",
+    "@changesets/cli": "^2.27.12",
     "@types/node": "^18.7.16",
-    "typescript": "^5.2.2"
+    "typescript": "^5.7.3"
   },
   "engines": {
     "node": ">=18.14.1"

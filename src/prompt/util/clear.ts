@@ -1,4 +1,8 @@
-import { erase, cursor } from "sisteransi";
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const { erase, cursor } = require("sisteransi");
+
 export const strip = (str: string) => {
   const pattern = [
     '[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',

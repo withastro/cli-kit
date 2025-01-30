@@ -1,7 +1,10 @@
 import Prompt from './prompt.js';
-import { erase, cursor } from 'sisteransi';
 import color from 'chalk';
 import clear, { strip } from '../util/clear.js';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const { erase, cursor } = require('sisteransi');
 
 /**
  * ConfirmPrompt Base Element

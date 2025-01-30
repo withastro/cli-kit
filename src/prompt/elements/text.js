@@ -1,8 +1,11 @@
 import Prompt from './prompt.js';
-import { erase, cursor } from 'sisteransi';
 import color from 'chalk';
 import { useAscii } from '../../utils/index.js';
 import clear, { lines, strip } from '../util/clear.js';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const { erase, cursor } = require('sisteransi');
 
 /**
  * TextPrompt Base Element
@@ -196,7 +199,7 @@ export default class TextPrompt extends Prompt {
     this.outputError = '';
 
     const prefix = ' '.repeat(strip(this.label).length);
-    
+
     this.outputText = [
       '\n',
       this.label,

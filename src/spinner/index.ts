@@ -1,8 +1,11 @@
 import readline from "node:readline";
 import chalk from "chalk";
 import { createLogUpdate } from "log-update";
-import { erase, cursor } from "sisteransi";
+import { createRequire } from 'node:module';
 import { sleep } from "../utils/index.js";
+
+const require = createRequire(import.meta.url);
+const { erase, cursor } = require("sisteransi");
 
 const COLORS = [
   "#883AE3",
@@ -55,7 +58,6 @@ async function gradient(
   const logUpdate = createLogUpdate(stdout);
   let i = 0;
   const frames = getGradientAnimFrames();
-  let interval: NodeJS.Timeout;
 
   const rl = readline.createInterface({ input: stdin, escapeCodeTimeout: 50 });
   readline.emitKeypressEvents(stdin, rl);
@@ -100,7 +102,6 @@ async function gradient(
     stop() {
       done = true;
       stdin.removeListener("keypress", keypress);
-      clearInterval(interval);
       logUpdate.clear();
       rl.close();
     },
@@ -121,7 +122,7 @@ export async function spinner(
     const loading = await gradient(start, { stdin, stdout });
     const act = update();
     const tooslow = Object.create(null);
-  
+
     try {
         const result = await Promise.race([sleep(500).then(() => tooslow), act]);
         if (result === tooslow) {
@@ -175,7 +176,7 @@ export async function tasks({ start, end }: { start: string, end: string}, t: Ta
   let action;
   let i = 0;
   let timeouts: NodeJS.Timeout[] = [];
-  
+
   for (const task of t) {
     i++;
     text[i] = formatTask(task, 'start');

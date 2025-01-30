@@ -1,10 +1,11 @@
 import readline from 'node:readline';
 import EventEmitter from 'node:events';
-
 import { action } from '../util/action.js'
-import { beep, cursor } from 'sisteransi';
 import color from 'chalk';
-import { strip } from '../util/clear.js';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const { beep, cursor } = require('sisteransi');
 
 /**
  * Base prompt skeleton
