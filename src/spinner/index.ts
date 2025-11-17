@@ -55,7 +55,7 @@ async function gradient(
   const logUpdate = createLogUpdate(stdout);
   let i = 0;
   const frames = getGradientAnimFrames();
-  let interval: NodeJS.Timeout;
+  let interval: NodeJS.Timeout | undefined;
 
   const rl = readline.createInterface({ input: stdin, escapeCodeTimeout: 50 });
   readline.emitKeypressEvents(stdin, rl);
