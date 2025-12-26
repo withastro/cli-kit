@@ -55,6 +55,9 @@ export default class SelectPrompt extends Prompt {
 
   _(c, key) {
     if (this.timeout) clearTimeout(this.timeout);
+    if (c === undefined) {
+      return;
+    }
     if (!Number.isNaN(Number.parseInt(c))) {
       const n = Number.parseInt(c) - 1;
       this.moveCursor(n);

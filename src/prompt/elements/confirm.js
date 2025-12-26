@@ -98,6 +98,9 @@ export default class ConfirmPrompt extends Prompt {
   }
 
   _(c, key) {
+    if (c === undefined) {
+      return;
+    }
     if (!Number.isNaN(Number.parseInt(c))) {
       const n = Number.parseInt(c) - 1;
       this.moveCursor(n);

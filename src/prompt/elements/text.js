@@ -114,6 +114,9 @@ export default class TextPrompt extends Prompt {
   }
 
   _(c, key) {
+    if (c === undefined) {
+      return;
+    }
     let s1 = this.value.slice(0, this.cursor);
     let s2 = this.value.slice(this.cursor);
     this.value = `${s1}${c}${s2}`;

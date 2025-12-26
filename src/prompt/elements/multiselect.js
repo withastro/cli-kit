@@ -73,6 +73,9 @@ export default class MultiselectPrompt extends Prompt {
   }
 
   _(c, key) {
+    if (c === undefined) {
+      return;
+    }
     if (c === ' ') {
       return this.toggle();
     }

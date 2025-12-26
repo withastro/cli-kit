@@ -20,6 +20,7 @@ export const action = (key: Key, isSelect: boolean) => {
 
   if (key.name === 'return') return 'submit';
   if (key.name === 'enter') return 'submit'; // ctrl + J
+  if (key.code === 'OM') return 'submit'; // shift + enter
   if (key.name === 'backspace') return 'delete';
   if (key.name === 'delete') return 'deleteForward';
   if (key.name === 'abort') return 'abort';
