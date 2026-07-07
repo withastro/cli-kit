@@ -66,8 +66,6 @@ async function gradient(
       spinner.stop();
       process.exit(0);
     }
-    if (stdin.isTTY) stdin.setRawMode(true);
-    stdout.write(cursor.hide + erase.lines(text.split('\n').length));
   };
 
   let refresh = () => {};
